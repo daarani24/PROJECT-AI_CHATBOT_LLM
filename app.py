@@ -8,6 +8,43 @@ st.set_page_config(
 
 st.title("🤖 AI Chatbot")
 
+with st.sidebar:
+    st.header("⚙️ Settings")
+    model = st.selectbox(
+        "Choose Model",
+        [
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "gemma2-9b-it"
+        ]
+    )
+    temperature = st.slider(
+        "Temperature",
+        0.0,
+        1.0,
+        0.7
+    )
+    max_tokens = st.slider(
+        "Max Tokens",
+        100,
+        2048,
+        1024
+    )
+
+    if st.button("🗑 Clear Chat"):
+        st.session_state.messages = [
+            {
+                "role":"system",
+                "content":"You are a friendly AI assistant."
+            }
+        ]
+        st.rerun()
+    st.divider()
+    st.markdown("### About")
+    st.write(
+        "AI Chatbot powered by Groq + Llama."
+    )
+
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
@@ -38,9 +75,9 @@ if question:
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            answer = get_ai_response(st.session_state.messages)
+            answer = get_ai_response(st.session_state.messages,model, temperature, max_tokens)
             st.write(answer)
-            
+
     st.session_state.messages.append(
         {
             "role": "assistant",
