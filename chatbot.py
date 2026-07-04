@@ -4,23 +4,14 @@ import os
 
 load_dotenv()
 
-api_key=os.getenv("GROQ_API_KEY")
+client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
-client=Groq(api_key=api_key)
-
-def get_ai_response(question):
-    response=client.chat.completions.create(
+def get_ai_response(messages):
+    response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role":"system",
-                "content":"You are a helpful AI assistant. Explain things clearly and simply."
-            },
-            {
-                "role":"user",
-                "content":question
-            }
-        ],
+        messages=messages,
         temperature=0.7,
         max_tokens=1024
     )
